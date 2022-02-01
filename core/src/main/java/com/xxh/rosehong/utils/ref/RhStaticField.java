@@ -10,12 +10,12 @@ import java.lang.reflect.Field;
 public class RhStaticField<T> {
     private static final String TAG = RhStaticField.class.getSimpleName();
 
-    private Field refField;
+    private Field refStaticField;
 
-    public RhStaticField(Class srcClass, String fieldName) {
+    public RhStaticField(Class srcClass, Field refField) {
         try {
-            refField = srcClass.getField(fieldName);
-            refField.setAccessible(true);
+            refStaticField = srcClass.getDeclaredField(refField.getName());
+            refStaticField.setAccessible(true);
         } catch (NoSuchFieldException e) {
             e.printStackTrace();
         }
@@ -23,7 +23,7 @@ public class RhStaticField<T> {
 
     public void set(T value) {
         try {
-            refField.set(null, value);
+            refStaticField.set(null, value);
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
@@ -31,7 +31,7 @@ public class RhStaticField<T> {
 
     public T get() {
         try {
-            return (T) refField.get(null);
+            return (T) refStaticField.get(null);
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }

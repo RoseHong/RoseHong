@@ -17,8 +17,11 @@ public class RhClass {
     private static Map<Class, Constructor> mInterfaceMap = new HashMap<>(5);
     static {
         try {
-            mInterfaceMap.put(RhField.class, RhField.class.getConstructor(Class.class, String.class));
-            mInterfaceMap.put(RhStaticField.class, RhStaticField.class.getConstructor(Class.class, String.class));
+            mInterfaceMap.put(RhField.class, RhField.class.getConstructor(Class.class, Field.class));
+            mInterfaceMap.put(RhStaticField.class, RhStaticField.class.getConstructor(Class.class, Field.class));
+            mInterfaceMap.put(RhMethod.class, RhMethod.class.getConstructor(Class.class, Field.class));
+            mInterfaceMap.put(RhStaticMethod.class, RhStaticMethod.class.getConstructor(Class.class, Field.class));
+            mInterfaceMap.put(RhConstructor.class, RhConstructor.class.getConstructor(Class.class, Field.class));
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
         }
@@ -31,10 +34,10 @@ public class RhClass {
 
     public static Class<?> init(Class refClass, Class srcClass) {
         for (Field field : refClass.getFields()) {
-            if (Modifier.isStatic(field.getModifiers()) && mInterfaceMap.containsKey(field.getDeclaringClass())) {
-                Constructor constructor = mInterfaceMap.get(field.getDeclaringClass());
+            if (Modifier.isStatic(field.getModifiers()) && mInterfaceMap.containsKey(field.getType())) {
+                Constructor constructor = mInterfaceMap.get(field.getType());
                 try {
-                    field.set(null, constructor.newInstance(srcClass, field.getName()));
+                    field.set(null, constructor.newInstance(srcClass, field));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

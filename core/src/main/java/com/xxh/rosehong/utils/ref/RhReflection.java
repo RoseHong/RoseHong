@@ -20,8 +20,8 @@ public class RhReflection {
                 Class VMRuntime = (Class) forName.invoke(null, "dalvik.system.VMRuntime");
                 Method getRuntime = VMRuntime.getDeclaredMethod("getRuntime");
                 Object runtimeObj = getRuntime.invoke(null);
-                Method setHiddenApiExemptions = (Method) getDeclareMethod.invoke(runtimeObj, "setHiddenApiExemptions", String[].class);
-                setHiddenApiExemptions.invoke(runtimeObj, "L");
+                Method setHiddenApiExemptions = (Method) getDeclareMethod.invoke(VMRuntime, "setHiddenApiExemptions", new Class[]{String[].class});
+                setHiddenApiExemptions.invoke(runtimeObj, new String[][]{{"L"}});
             } catch (Exception e) {
                 e.printStackTrace();
             }

@@ -13,6 +13,8 @@ import com.xxh.rosehong.utils.ref.RhField;
 import com.xxh.rosehong.utils.ref.RhReflection;
 import com.xxh.rosehong.utils.ref.RhStaticField;
 
+import java.lang.reflect.Field;
+
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -25,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
         RhReflection.bypassHiddenApi();
 
         /*try {
-            Object mLoadedApk = Application.class.getField("mLoadedApk");
+            Object mLoadedApk = Application.class.getDeclaredField("mLoadedApk");
             if (mLoadedApk != null) {
                 Log.w(MainActivity.class.getSimpleName(), "mLoadedApk: " + mLoadedApk.getClass().getSimpleName());
             } else {
@@ -34,6 +36,10 @@ public class MainActivity extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }*/
+
+        Log.e(MainActivity.class.getSimpleName(), "ApplicationRef: " + ApplicationRef.REF);
+        Log.e(MainActivity.class.getSimpleName(), "mLoadedApk: " + ApplicationRef.mLoadedApk.toString());
+        Log.e(MainActivity.class.getSimpleName(), "TAG: " + ApplicationRef.TAG.get());
     }
 
     public static class ApplicationRef {

@@ -12,10 +12,10 @@ public class RhField<T> {
 
     private Field refField;
 
-    public RhField(Class srcClass, String fieldName) {
+    public RhField(Class srcClass, Field refField) {
         try {
-            refField = srcClass.getField(fieldName);
-            refField.setAccessible(true);
+            this.refField = srcClass.getDeclaredField(refField.getName());
+            this.refField.setAccessible(true);
         } catch (NoSuchFieldException e) {
             e.printStackTrace();
         }
