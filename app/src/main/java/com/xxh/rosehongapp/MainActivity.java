@@ -8,12 +8,16 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
+import com.xxh.rosehong.utils.hooks.proxy.RhDynamicProxy;
+import com.xxh.rosehong.utils.hooks.proxy.RhDynamicProxyMethod;
+import com.xxh.rosehong.utils.hooks.proxy.RhDynamicProxyMethodParams;
 import com.xxh.rosehong.utils.ref.RhClass;
 import com.xxh.rosehong.utils.ref.RhField;
 import com.xxh.rosehong.utils.ref.RhReflection;
 import com.xxh.rosehong.utils.ref.RhStaticField;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -21,6 +25,38 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+    }
+
+    private interface ITestDynamicProxy {
+        int doTest();
+    }
+
+    private static class TestDynamic implements ITestDynamicProxy {
+
+        @Override
+        public int doTest() {
+            int a = 1;
+            int b = 0;
+            int s = a / b;
+            return s;
+        }
+    }
+
+    public void dynamicProxyOnClick(View view) {
+        TestDynamic testDynamic = new TestDynamic();
+        try {
+            RhDynamicProxy<ITestDynamicProxy> rhDynamicProxy = new RhDynamicProxy<>(testDynamic);
+            rhDynamicProxy.addDynamicProxyMethod(new RhDynamicProxyMethod("doTest") {
+                @Override
+                public Object callHookedMethod(RhDynamicProxyMethodParams params) throws InvocationTargetException, IllegalAccessException {
+                    return super.callHookedMethod(params);
+                }
+            });
+            ITestDynamicProxy proxyTestDynamic = rhDynamicProxy.getProxyObject();
+            proxyTestDynamic.doTest();
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
     }
 
     public void bypassHiddenApiOnClick(View view) {

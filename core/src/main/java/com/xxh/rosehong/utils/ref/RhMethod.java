@@ -13,18 +13,18 @@ import java.lang.reflect.Method;
 public class RhMethod<T> {
     private static final String TAG = RhMethod.class.getSimpleName();
 
-    private Method refMethod;
+    private Method mRefMethod;
 
     public RhMethod(Class srcClass, Field refField) {
         try {
             Class<?>[] parameterTypes = getParams(refField);
             String methodName = resolveMethodName(refField);
             if (parameterTypes != null) {
-                this.refMethod = srcClass.getDeclaredMethod(methodName, parameterTypes);
+                mRefMethod = srcClass.getDeclaredMethod(methodName, parameterTypes);
             } else {
-                this.refMethod = srcClass.getDeclaredMethod(methodName);
+                mRefMethod = srcClass.getDeclaredMethod(methodName);
             }
-            this.refMethod.setAccessible(true);
+            mRefMethod.setAccessible(true);
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
         }
@@ -69,7 +69,7 @@ public class RhMethod<T> {
 
     public T call(Object obj, Object... parameters) {
         try {
-            return (T) refMethod.invoke(obj, parameters);
+            return (T) mRefMethod.invoke(obj, parameters);
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         } catch (InvocationTargetException e) {

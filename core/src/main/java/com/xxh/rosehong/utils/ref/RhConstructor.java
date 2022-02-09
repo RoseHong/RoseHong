@@ -12,17 +12,17 @@ import java.lang.reflect.InvocationTargetException;
 public class RhConstructor<T> {
     private static final String TAG = RhConstructor.class.getSimpleName();
 
-    private Constructor<?> refConstructor;
+    private Constructor<?> mRefConstructor;
 
     public RhConstructor(Class<?> srcClass, Field refField) {
         Class<?>[] parameterTypes = RhMethod.getParams(refField);
         try {
             if (parameterTypes != null) {
-                refConstructor = srcClass.getConstructor(parameterTypes);
+                mRefConstructor = srcClass.getConstructor(parameterTypes);
             } else {
-                refConstructor = srcClass.getConstructor();
+                mRefConstructor = srcClass.getConstructor();
             }
-            refConstructor.setAccessible(true);
+            mRefConstructor.setAccessible(true);
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
         }
@@ -30,7 +30,7 @@ public class RhConstructor<T> {
 
     public T newInstance(Object... parameters) {
         try {
-            return (T) refConstructor.newInstance(parameters);
+            return (T) mRefConstructor.newInstance(parameters);
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         } catch (InstantiationException e) {
