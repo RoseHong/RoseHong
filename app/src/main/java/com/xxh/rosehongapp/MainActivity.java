@@ -3,8 +3,14 @@ package com.xxh.rosehongapp;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Application;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.IBinder;
+import android.os.RemoteException;
 import android.util.Log;
 import android.view.View;
 
@@ -82,5 +88,34 @@ public class MainActivity extends AppCompatActivity {
         public static Class REF = RhClass.init(ApplicationRef.class, Application.class);
         public static RhField<Object> mLoadedApk;
         public static RhStaticField<String> TAG;
+    }
+
+    private IHowBinder iHowBinder = null;
+    public void binderServiceOnClick(View view) {
+        /**
+         * 参考android framework的设计，采用C/S架构来做实现则显得非常有必须要，
+         * 毕竟运行在虚拟环境下的app，没有必要都跑着一个具有同样功能的service。
+         * */
+        if (iHowBinder == null) {
+            Intent intent = new Intent(this, HowService.class);
+            bindService(intent, new ServiceConnection() {
+                @Override
+                public void onServiceConnected(ComponentName name, IBinder service) {
+                    iHowBinder = IHowBinder.Stub.asInterface(service);
+                    Log.e("===========", "onServiceConnected!!!!===" + name);
+                }
+
+                @Override
+                public void onServiceDisconnected(ComponentName name) {
+                    iHowBinder = null;
+                }
+            }, Context.BIND_AUTO_CREATE);
+        } else {
+            try {
+                iHowBinder.callRemote(1);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
