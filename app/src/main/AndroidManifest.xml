@@ -15,6 +15,12 @@
             android:enabled="true"
             android:exported="true" />
 
+        <provider
+            android:authorities="com.xxh.rosehongapp.howprovider.HowBinderServer"
+            android:name=".howprovider.HowProviderServer"
+            android:exported="true"
+            android:process=":core"/>
+
         <activity
             android:name=".MainActivity"
             android:exported="true">

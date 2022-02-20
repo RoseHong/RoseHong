@@ -21,6 +21,8 @@ import com.xxh.rosehong.utils.ref.RhClass;
 import com.xxh.rosehong.utils.ref.RhField;
 import com.xxh.rosehong.utils.ref.RhReflection;
 import com.xxh.rosehong.utils.ref.RhStaticField;
+import com.xxh.rosehongapp.howprovider.HowBinderClient;
+import com.xxh.rosehongapp.howprovider.HowProviderClient;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -117,5 +119,11 @@ public class MainActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
+    }
+
+    public void binderProviderOnClick(View view) {
+        HowProviderClient.getInstance().init(this);
+        int res = HowBinderClient.getsInstance().callRemote(88);
+        Log.e(MainActivity.class.getSimpleName(), "binderProviderOnClick: " + res);
     }
 }
