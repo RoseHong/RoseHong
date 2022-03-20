@@ -2,4 +2,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.xxh.rosehong">
 
+    <application>
+        <provider
+            android:authorities="com.xxh.rosehong.client.RhServiceManager"
+            android:permission="com.xxh.rosehong.server.permission"
+            android:exported="true"
+            android:enabled="true"
+            android:process=":server"
+            android:name=".server.RhServiceManagerService"/>
+    </application>
 </manifest>
