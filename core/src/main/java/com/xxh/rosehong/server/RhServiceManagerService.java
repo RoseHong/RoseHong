@@ -8,7 +8,8 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.text.TextUtils;
 
-import com.xxh.rosehong.config.RhConfig;
+import com.xxh.rosehong.bridge.IRhServiceManager;
+import com.xxh.rosehong.config.RhSystemConfig;
 import com.xxh.rosehong.utils.system.RhLog;
 
 import java.util.HashMap;
@@ -26,6 +27,8 @@ import java.util.Map;
 public class RhServiceManagerService extends ContentProvider {
     private static final String TAG = RhServiceManagerService.class.getSimpleName();
 
+    private Map<String, IBinder> mServiceCache = new HashMap<>();
+    private RhServiceManagerInternal mInternal = new RhServiceManagerInternal();
     private static boolean mIsInit = false;
 
     private void init() {
@@ -33,8 +36,10 @@ public class RhServiceManagerService extends ContentProvider {
             return;
         }
         mIsInit = true;
+    }
 
-
+    private RhServiceManagerInternal get() {
+        return mInternal;
     }
 
     @Override
@@ -46,8 +51,13 @@ public class RhServiceManagerService extends ContentProvider {
     @Override
     public Bundle call(String method, String arg, Bundle extras) {
         if (!TextUtils.isEmpty(method)) {
-            if (method.equals(RhConfig.SERVER_INIT_METHOD)) {
-                
+            if (method.equals(RhSystemConfig.SERVER_INIT_METHOD)) {
+                Bundle resBundle = new Bundle();
+                /**
+                 * 直接传递mInternal，方便客户端/服务器完成相关的register、get和unregister操作
+                 */
+                resBundle.putBinder(RhSystemConfig.KEY_SERVER_CONTROL_BINDER, get());
+                return resBundle;
             }
         }
         return super.call(method, arg, extras);
@@ -78,23 +88,26 @@ public class RhServiceManagerService extends ContentProvider {
         return 0;
     }
 
-    private static class RhServiceCache {
-        private Map<String, IBinder> mCache = new HashMap<>();
+    //使用内部类的好处，可以直接操作mServiceCache
+    private class RhServiceManagerInternal extends IRhServiceManager.Stub {
 
+        @Override
+        public IBinder getService(String serviceName) {
+            return mServiceCache.get(serviceName);
+        }
+
+        @Override
         public void register(String serviceName, IBinder service) {
-            if (mCache.containsKey(serviceName)) {
+            if (mServiceCache.containsKey(serviceName)) {
                 RhLog.w(TAG, "Repeat registration! serviceName: " + serviceName);
                 return;
             }
-            mCache.put(serviceName, service);
+            mServiceCache.put(serviceName, service);
         }
 
-        public IBinder getService(String serviceName) {
-            return mCache.get(serviceName);
-        }
-
+        @Override
         public IBinder unregister(String serviceName) {
-            return mCache.remove(serviceName);
+            return mServiceCache.remove(serviceName);
         }
     }
 }
