@@ -1,9 +1,11 @@
-package com.xxh.rosehong.client;
+package com.xxh.rosehong.client.mgr;
 
 import android.os.Bundle;
 import android.os.IBinder;
+import android.os.RemoteException;
 
 import com.xxh.rosehong.bridge.IRhServiceManager;
+import com.xxh.rosehong.client.RhApp;
 import com.xxh.rosehong.config.RhCustomConfig;
 import com.xxh.rosehong.config.RhSystemConfig;
 import com.xxh.rosehong.utils.system.RhLog;
@@ -29,7 +31,31 @@ public class RhServiceManager {
             return null;
         }
         IBinder service = resBundle.getBinder(RhSystemConfig.KEY_SERVER_CONTROL_BINDER);
+        if (service == null) {
+            return null;
+        }
+        IBinder.DeathRecipient deathRecipient = new IBinder.DeathRecipient() {
+            @Override
+            public void binderDied() {
+                service.unlinkToDeath(this, 0);
+                sServiceManager = null;
+            }
+        };
+        try {
+            service.linkToDeath(deathRecipient, 0);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
         sServiceManager = IRhServiceManager.Stub.asInterface(service);
         return sServiceManager;
+    }
+
+    public static IBinder getServiceBinder(String serviceName) {
+        try {
+            return getIServiceManager().getService(serviceName);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

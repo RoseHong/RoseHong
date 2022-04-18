@@ -35,6 +35,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
     }
 
+    public void testManagerServiceOnClick(View view) {
+        TestManagerService.test();
+    }
+
     private interface ITestDynamicProxy {
         int doTest();
     }

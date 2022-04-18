@@ -47,10 +47,10 @@ public class RhMethod<T> {
         Class<?>[] res = null;
         if (field.isAnnotationPresent(RhMethodParams.class)) {
             RhMethodParams annotation = field.getAnnotation(RhMethodParams.class);
-            res = annotation.params();
+            res = annotation.value();
         } else if (field.isAnnotationPresent(RhMethodStrings.class)) {
             RhMethodStrings annotation = field.getAnnotation(RhMethodStrings.class);
-            String[] classNames = annotation.params();
+            String[] classNames = annotation.value();
             if (classNames != null && classNames.length > 0) {
                 res = new Class[classNames.length];
                 for (int i = 0; i < classNames.length; i++) {

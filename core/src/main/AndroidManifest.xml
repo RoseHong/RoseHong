@@ -4,7 +4,7 @@
 
     <application>
         <provider
-            android:authorities="com.xxh.rosehong.client.RhServiceManager"
+            android:authorities="com.xxh.rosehong.client.mgr.RhServiceManager"
             android:permission="com.xxh.rosehong.server.permission"
             android:exported="true"
             android:enabled="true"

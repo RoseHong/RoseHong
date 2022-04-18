@@ -35,6 +35,10 @@ public class RhServiceManagerService extends ContentProvider {
         if (mIsInit) {
             return;
         }
+
+        //注册所有的mgr服务
+        registerService(RhSystemConfig.RhServiceManagerName.PACKAGE, new RhPackageManagerService());
+
         mIsInit = true;
     }
 
@@ -46,6 +50,10 @@ public class RhServiceManagerService extends ContentProvider {
     public boolean onCreate() {
         init();
         return true;
+    }
+
+    private void registerService(String serviceName, IBinder service) {
+        get().register(serviceName, service);
     }
 
     @Override

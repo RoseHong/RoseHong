@@ -13,9 +13,5 @@ public class RhCustomConfig {
     /**
      * 服务进程provider的author
      */
-    public static final String SERVER_AUTHOR_NAME;
-
-    static {
-        SERVER_AUTHOR_NAME = "com.xxh.rosehong.client.RhServiceManager";
-    }
+    public static final String SERVER_AUTHOR_NAME = "com.xxh.rosehong.client.mgr.RhServiceManager";
 }
