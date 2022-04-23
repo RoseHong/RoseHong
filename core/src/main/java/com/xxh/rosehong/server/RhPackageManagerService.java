@@ -1,6 +1,9 @@
 package com.xxh.rosehong.server;
 
 import com.xxh.rosehong.bridge.IRhPackageManager;
+import com.xxh.rosehong.config.RhCustomConfig;
+import com.xxh.rosehong.model.RhInstallResMod;
+import com.xxh.rosehong.utils.system.RhFile;
 import com.xxh.rosehong.utils.system.RhLog;
 
 /**
@@ -12,7 +15,9 @@ public class RhPackageManagerService extends IRhPackageManager.Stub {
     private static final String TAG = RhPackageManagerService.class.getSimpleName();
 
     @Override
-    public void test() {
-        RhLog.i(TAG, "test!!!!!!!!!!!!");
+    public RhInstallResMod installApk(String apkPath) {
+        //TODO: 解析apk包
+        RhFile.copyFile(apkPath, RhCustomConfig.getInnerApkPathByPackageName(""));
+        return null;
     }
 }

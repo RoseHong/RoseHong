@@ -1,6 +1,5 @@
 package com.xxh.rosehong.client.mgr;
 
-import android.os.Binder;
 import android.os.IBinder;
 import android.os.IInterface;
 import android.os.RemoteException;

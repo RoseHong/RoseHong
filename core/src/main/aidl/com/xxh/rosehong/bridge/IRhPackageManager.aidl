@@ -6,6 +6,8 @@
 
 package com.xxh.rosehong.bridge;
 
+import com.xxh.rosehong.model.RhInstallResMod;
+
 interface IRhPackageManager {
-    void test();
+    RhInstallResMod installApk(String apkPath);
 }

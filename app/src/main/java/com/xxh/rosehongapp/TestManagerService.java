@@ -11,6 +11,6 @@ public class TestManagerService {
     private static final String TAG = TestManagerService.class.getSimpleName();
 
     public static void test() {
-        RhPackageManager.get().test();
+        //RhPackageManager.get().test();
     }
 }

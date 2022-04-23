@@ -35,7 +35,7 @@ public class RhReflection {
                 Method getRuntime = VMRuntime.getDeclaredMethod("getRuntime");
                 Object runtimeObj = getRuntime.invoke(null);
                 Method setHiddenApiExemptions = (Method) getDeclareMethod.invoke(VMRuntime, "setHiddenApiExemptions", new Class[]{String[].class});
-                setHiddenApiExemptions.invoke(runtimeObj, new String[][]{{"L"}});
+                setHiddenApiExemptions.invoke(runtimeObj, new Object[]{new String[]{"L"}});
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -107,7 +107,7 @@ public class RhReflection {
                 }
                 if (getRuntimeMethod != null && setHiddenApiExemptionsMethod != null) {
                     Object runtimeObj = getRuntimeMethod.invoke(null);
-                    setHiddenApiExemptionsMethod.invoke(runtimeObj, new String[][]{{"L"}});
+                    setHiddenApiExemptionsMethod.invoke(runtimeObj, new Object[]{new String[]{"L"}});
                 } else {
                     RhLog.e(TAG, "bypassHiddenApiEx failed!");
                 }

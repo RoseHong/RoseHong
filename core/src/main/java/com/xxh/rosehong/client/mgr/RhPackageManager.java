@@ -4,6 +4,7 @@ import android.os.RemoteException;
 
 import com.xxh.rosehong.bridge.IRhPackageManager;
 import com.xxh.rosehong.config.RhSystemConfig;
+import com.xxh.rosehong.model.RhInstallResMod;
 
 /**
  * @author xxh
@@ -23,11 +24,12 @@ public class RhPackageManager extends RhManagerBase<IRhPackageManager> {
         return sInstance;
     }
 
-    public void test() {
+    public RhInstallResMod installApk(String apkPath) {
         try {
-            getService().test();
+            return getService().installApk(apkPath);
         } catch (RemoteException e) {
             e.printStackTrace();
         }
+        return new RhInstallResMod(-1, "failed");
     }
 }

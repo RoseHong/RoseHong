@@ -25,5 +25,6 @@ public class RhSystemConfig {
      */
     public static class RhServiceManagerName {
         public static final String PACKAGE = "package";
+        public static final String ACTIVITY = "activity";
     }
 }
