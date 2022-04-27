@@ -1,4 +1,4 @@
-package com.xxh.rosehong.server;
+package com.xxh.rosehong.server.am;
 
 import com.xxh.rosehong.bridge.IRhActivityManager;
 

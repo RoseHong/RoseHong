@@ -10,6 +10,7 @@ import android.text.TextUtils;
 
 import com.xxh.rosehong.bridge.IRhServiceManager;
 import com.xxh.rosehong.config.RhSystemConfig;
+import com.xxh.rosehong.server.pm.RhPackageManagerService;
 import com.xxh.rosehong.utils.system.RhLog;
 
 import java.util.HashMap;

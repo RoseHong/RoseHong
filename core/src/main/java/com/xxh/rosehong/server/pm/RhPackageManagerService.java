@@ -1,10 +1,9 @@
-package com.xxh.rosehong.server;
+package com.xxh.rosehong.server.pm;
 
 import com.xxh.rosehong.bridge.IRhPackageManager;
 import com.xxh.rosehong.config.RhCustomConfig;
 import com.xxh.rosehong.model.RhInstallResMod;
 import com.xxh.rosehong.utils.system.RhFile;
-import com.xxh.rosehong.utils.system.RhLog;
 
 /**
  * @author xxh
