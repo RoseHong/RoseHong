@@ -27,9 +27,14 @@ public class RhClass {
         }
     }
 
-    public static Class<?> init(Class refClass, String srcClassName) throws ClassNotFoundException {
-        Class srcClass = Class.forName(srcClassName);
-        return init(refClass, srcClass);
+    public static Class<?> init(Class refClass, String srcClassName) {
+        try {
+            Class srcClass = Class.forName(srcClassName);
+            return init(refClass, srcClass);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public static Class<?> init(Class refClass, Class srcClass) {
