@@ -12,11 +12,11 @@ import com.xxh.rosehong.utils.system.RhFile;
  */
 public class RhPackageManagerService extends IRhPackageManager.Stub {
     private static final String TAG = RhPackageManagerService.class.getSimpleName();
+    private RhApkInstaller apkInstaller = new RhApkInstaller();
 
     @Override
     public RhInstallResMod installApk(String apkPath) {
-        //TODO: 解析apk包
-        RhFile.copyFile(apkPath, RhCustomConfig.getInnerApkPathByPackageName(""));
+
         return null;
     }
 }

@@ -3,6 +3,8 @@ package com.xxh.rosehong.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.xxh.rosehong.config.RhSystemConfig;
+
 /**
  * @author xxh
  * @email mike_just@163.com
@@ -12,6 +14,14 @@ public class RhInstallResMod implements Parcelable {
 
     private int resCode;
     private String resDesc;
+
+    public static RhInstallResMod success() {
+        return new RhInstallResMod(RhSystemConfig.CODE_SUCCESS, "success");
+    }
+
+    public static RhInstallResMod failed(String errorMsg) {
+        return new RhInstallResMod(RhSystemConfig.CODE_FAILED, errorMsg);
+    }
     
     public RhInstallResMod(int resCode, String resDesc) {
         this.resCode = resCode;

@@ -21,6 +21,12 @@ public class RhSystemConfig {
     public static final String KEY_SERVER_CONTROL_BINDER = "__RH_KEY_SERVER_CONTROL_BINDER__";
 
     /**
+     * 通用成功/失败返回值
+     */
+    public static final int CODE_SUCCESS = 0;
+    public static final int CODE_FAILED = -1;
+
+    /**
      * 定义服务名称
      */
     public static class RhServiceManagerName {

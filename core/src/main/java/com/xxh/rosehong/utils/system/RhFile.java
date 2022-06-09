@@ -1,5 +1,7 @@
 package com.xxh.rosehong.utils.system;
 
+import android.text.TextUtils;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -27,5 +29,35 @@ public class RhFile {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public static boolean isApkFile(String filePath) {
+        if (!TextUtils.isEmpty(filePath) && filePath.endsWith(".apk")) {
+            return true;
+        }
+        return false;
+    }
+
+    public static boolean isApksFile(String filePath) {
+        if (!TextUtils.isEmpty(filePath) && (filePath.endsWith(".apks") || filePath.endsWith(".xapk"))) {
+            return true;
+        }
+        return false;
+    }
+
+    public static String getFileNameFromPath(String path) {
+        int last = path.lastIndexOf("/");
+        if (last == -1) {
+            return path;
+        }
+        return path.substring(last + 1);
+    }
+
+    /**
+     * 解压zip包到当前路径
+     * @return 当前路径
+     */
+    public static File extractZipFile(File zipFile) {
+        return null;
     }
 }
