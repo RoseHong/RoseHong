@@ -5,6 +5,9 @@ import android.text.TextUtils;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 /**
  * @author xxh
@@ -13,6 +16,14 @@ import java.io.FileOutputStream;
  */
 public class RhFile {
     private static final String TAG = RhFile.class.getSimpleName();
+
+    public static void copyStream(InputStream srcStream, OutputStream destStream) throws IOException {
+        byte[] buf = new byte[1024 * 1024];
+        int len;
+        while ((len = srcStream.read(buf)) > 0) {
+            destStream.write(buf, 0, len);
+        }
+    }
 
     public static void copyFile(String srcPath, String destPath) {
         copyFile(new File(srcPath), new File(destPath));

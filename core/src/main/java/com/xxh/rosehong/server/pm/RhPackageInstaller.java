@@ -10,18 +10,18 @@ import java.io.File;
  * @email mike_just@163.com
  * @date 2022/4/27 23:37
  */
-public class RhApkInstaller {
-    private static final String TAG = RhApkInstaller.class.getSimpleName();
+public class RhPackageInstaller {
+    private static final String TAG = RhPackageInstaller.class.getSimpleName();
 
-    public RhInstallResMod installApk(String apkPath) {
+    public RhInstallResMod installPackage(String packageFilePath) {
         return RhInstallResMod.success();
     }
 
     /**
      * 准备好所有的安装文件并且返回File对象，若是xapk/apks，则在此方法进行解压且返回路径
      */
-    private File prepareInstallFiles(String apkPath) {
-        File file = new File(apkPath);
+    private File prepareInstallFiles(String packageFilePath) {
+        File file = new File(packageFilePath);
         if (file.isFile()) {
             if (RhFile.isApkFile(file.getName())) {
                 return file;
@@ -31,9 +31,5 @@ public class RhApkInstaller {
         }
         //TODO: 清理一下文件夹，避免有其他不必要的文件存在导致解析失败
         return null;
-    }
-
-    private File extractApksFile(File apksFile) {
-        
     }
 }
