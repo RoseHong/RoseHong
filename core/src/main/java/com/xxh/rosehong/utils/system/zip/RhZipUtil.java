@@ -67,7 +67,7 @@ public class RhZipUtil {
                 }
                 String zipEntryFileName = RhFile.getFileNameFromPath(zipEntry.getName());
                 File extractFile = new File(outFile, zipEntryFileName);
-                extractFile.deleteOnExit();
+                extractFile.delete();
                 try (InputStream in = zipFile.getInputStream(zipEntry); OutputStream out = new FileOutputStream(extractFile)) {
                     RhFile.copyStream(in, out);
                 }

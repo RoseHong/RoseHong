@@ -8,6 +8,7 @@ import android.content.pm.ProviderInfo;
 import android.content.pm.ServiceInfo;
 
 import com.xxh.rosehong.utils.ref.RhClass;
+import com.xxh.rosehong.utils.ref.RhConstructor;
 import com.xxh.rosehong.utils.ref.RhField;
 import com.xxh.rosehong.utils.ref.RhMethod;
 import com.xxh.rosehong.utils.ref.RhMethodParams;
@@ -21,6 +22,8 @@ import java.util.ArrayList;
  */
 public class PackageParserRef {
     public static Class<?> REF = RhClass.init(PackageParserRef.class, "android.content.pm.PackageParser");
+
+    public static RhConstructor<Object> constructor;
 
     @RhMethodParams({String.class, int.class})
     public static RhMethod<Object> parsePackage;

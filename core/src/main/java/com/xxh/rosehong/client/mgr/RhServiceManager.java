@@ -9,7 +9,7 @@ import com.xxh.rosehong.client.RhApp;
 import com.xxh.rosehong.config.RhCustomConfig;
 import com.xxh.rosehong.config.RhSystemConfig;
 import com.xxh.rosehong.utils.system.RhLog;
-import com.xxh.rosehong.utils.system.RhProvider;
+import com.xxh.rosehong.utils.system.RhProviderHelper;
 
 /**
  * @author xxh
@@ -25,7 +25,7 @@ public class RhServiceManager {
         if (sServiceManager != null) {
             return sServiceManager;
         }
-        Bundle resBundle = RhProvider.call(RhApp.get().getHostContext(), RhCustomConfig.SERVER_AUTHOR_NAME, RhSystemConfig.SERVER_INIT_METHOD, "", new Bundle());
+        Bundle resBundle = RhProviderHelper.call(RhApp.get().getHostContext(), RhCustomConfig.SERVER_AUTHOR_NAME, RhSystemConfig.SERVER_INIT_METHOD, "", new Bundle());
         if (resBundle == null) {
             RhLog.printStackTrace(TAG, new RuntimeException("Can not init core server"));
             return null;

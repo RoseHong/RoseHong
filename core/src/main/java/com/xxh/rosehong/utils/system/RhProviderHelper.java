@@ -12,8 +12,8 @@ import android.os.SystemClock;
  * @email mike_just@163.com
  * @date 2022/2/4 上午12:52
  */
-public class RhProvider {
-    private static final String TAG = RhProvider.class.getSimpleName();
+public class RhProviderHelper {
+    private static final String TAG = RhProviderHelper.class.getSimpleName();
 
     public static Bundle call(Context context, String authority, String method, String arg, Bundle extras) {
         return call(context, authority, method, arg, extras, 5, 100);

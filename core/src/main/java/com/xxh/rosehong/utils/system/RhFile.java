@@ -16,6 +16,9 @@ import java.io.OutputStream;
  */
 public class RhFile {
     private static final String TAG = RhFile.class.getSimpleName();
+    public static String APK = ".apk";
+    public static String APKS = ".apks";
+    public static String XAPK = ".xapk";
 
     public static void copyStream(InputStream srcStream, OutputStream destStream) throws IOException {
         byte[] buf = new byte[1024 * 1024];
@@ -42,15 +45,19 @@ public class RhFile {
         }
     }
 
+    public static boolean isApkFile(File file) {
+        return isApkFile(file.getName());
+    }
+
     public static boolean isApkFile(String filePath) {
-        if (!TextUtils.isEmpty(filePath) && filePath.endsWith(".apk")) {
+        if (!TextUtils.isEmpty(filePath) && filePath.endsWith(APK)) {
             return true;
         }
         return false;
     }
 
     public static boolean isApksFile(String filePath) {
-        if (!TextUtils.isEmpty(filePath) && (filePath.endsWith(".apks") || filePath.endsWith(".xapk"))) {
+        if (!TextUtils.isEmpty(filePath) && (filePath.endsWith(APKS) || filePath.endsWith(XAPK))) {
             return true;
         }
         return false;
@@ -64,11 +71,15 @@ public class RhFile {
         return path.substring(last + 1);
     }
 
-    /**
-     * 解压zip包到当前路径
-     * @return 当前路径
-     */
-    public static File extractZipFile(File zipFile) {
-        return null;
+    public static void deleteDeep(File file) {
+        if (file == null || !file.exists()) {
+            return;
+        }
+        if (!file.isFile()) {
+            for (File subFile : file.listFiles()) {
+                deleteDeep(subFile);
+            }
+        }
+        file.delete();
     }
 }
