@@ -4,6 +4,13 @@ import android.content.pm.ApplicationInfo;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.xxh.rosehong.server.pm.parser.component.activity.RhActivity;
+import com.xxh.rosehong.server.pm.parser.component.instrumentation.RhInstrumentation;
+import com.xxh.rosehong.server.pm.parser.component.permission.RhPermission;
+import com.xxh.rosehong.server.pm.parser.component.permission.RhPermissionGroup;
+import com.xxh.rosehong.server.pm.parser.component.provider.RhProvider;
+import com.xxh.rosehong.server.pm.parser.component.service.RhService;
+
 import java.util.ArrayList;
 
 /**
@@ -40,6 +47,8 @@ public class RhPackage implements Parcelable {
     public ArrayList<RhInstrumentation> instrumentation = new ArrayList<>(0);
 
     public ArrayList<String> requestedPermissions = new ArrayList<>();
+
+    public RhPackage() {}
 
     protected RhPackage(Parcel in) {
     }

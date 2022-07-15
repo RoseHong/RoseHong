@@ -1,11 +1,14 @@
 package com.xxh.rosehong.framework.ref.android.content.pm;
 
+import android.content.ComponentName;
 import android.content.pm.ActivityInfo;
 import android.content.pm.ApplicationInfo;
+import android.content.pm.InstrumentationInfo;
 import android.content.pm.PermissionGroupInfo;
 import android.content.pm.PermissionInfo;
 import android.content.pm.ProviderInfo;
 import android.content.pm.ServiceInfo;
+import android.os.Bundle;
 
 import com.xxh.rosehong.utils.ref.RhClass;
 import com.xxh.rosehong.utils.ref.RhConstructor;
@@ -37,12 +40,13 @@ public class PackageParserRef {
         public static RhField<String[]> splitCodePaths;
         public static RhField<ApplicationInfo> applicationInfo;
 
-        public static RhField<ArrayList> permissions;
-        public static RhField<ArrayList> permissionGroups;
-        public static RhField<ArrayList> activities;
-        public static RhField<ArrayList> receivers;
-        public static RhField<ArrayList> providers;
-        public static RhField<ArrayList> services;
+        public static RhField<ArrayList<Object>> permissions;
+        public static RhField<ArrayList<Object>> permissionGroups;
+        public static RhField<ArrayList<Object>> activities;
+        public static RhField<ArrayList<Object>> receivers;
+        public static RhField<ArrayList<Object>> providers;
+        public static RhField<ArrayList<Object>> services;
+        public static RhField<ArrayList<Object>> instrumentation;
 
         public static RhField<Integer> mVersionCode;
         public static RhField<String> mVersionName;
@@ -78,5 +82,32 @@ public class PackageParserRef {
     public static class ServiceRef {
         public static Class<?> REF = RhClass.init(ServiceRef.class, "android.content.pm.PackageParser$Service");
         public static RhField<ServiceInfo> info;
+    }
+
+    public static class InstrumentationRef {
+        public static Class<?> REF = RhClass.init(ServiceRef.class, "android.content.pm.PackageParser$Instrumentation");
+        public static RhField<InstrumentationInfo> info;
+    }
+
+    public static class IntentInfoRef {
+        public static Class<?> REF = RhClass.init(IntentInfoRef.class, "android.content.pm.PackageParser$IntentInfo");
+        public static RhField<Boolean> hasDefault;
+        public static RhField<Integer> labelRes;
+        public static RhField<CharSequence> nonLocalizedLabel;
+        public static RhField<Integer> icon;
+        public static RhField<Integer> logo;
+        public static RhField<Integer> banner;
+        public static RhField<Integer> preferred;
+    }
+
+    public static class ComponentRef {
+        public static Class<?> REF = RhClass.init(ComponentRef.class, "android.content.pm.PackageParser$Component");
+        public static RhField<ArrayList> intents;
+        public static RhField<String> className;
+        public static RhField<Bundle> metaData;
+        public static RhField<Object> owner;
+        public static RhField<Integer> order;
+        public static RhField<ComponentName> componentName;
+        public static RhField<String> componentShortName;
     }
 }
