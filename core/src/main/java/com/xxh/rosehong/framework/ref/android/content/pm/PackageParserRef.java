@@ -3,11 +3,14 @@ package com.xxh.rosehong.framework.ref.android.content.pm;
 import android.content.ComponentName;
 import android.content.pm.ActivityInfo;
 import android.content.pm.ApplicationInfo;
+import android.content.pm.ConfigurationInfo;
+import android.content.pm.FeatureInfo;
 import android.content.pm.InstrumentationInfo;
 import android.content.pm.PermissionGroupInfo;
 import android.content.pm.PermissionInfo;
 import android.content.pm.ProviderInfo;
 import android.content.pm.ServiceInfo;
+import android.content.pm.Signature;
 import android.os.Bundle;
 
 import com.xxh.rosehong.utils.ref.RhClass;
@@ -55,8 +58,15 @@ public class PackageParserRef {
         public static RhField<Object> mSigningDetails;
         public static RhField<Object> mExtras;
 
-        public static RhField<Integer> mCompileSdkVersion;
         public static RhField<Boolean> use32bitAbi;
+        public static RhField<Bundle> mAppMetaData;
+        public static RhField<Integer> mPreferredOrder;
+        public static RhField<ArrayList<String>> requestedPermissions;
+        public static RhField<ArrayList<String>> usesLibraries;
+        public static RhField<ArrayList<String>> usesOptionalLibraries;
+        public static RhField<ArrayList<ConfigurationInfo>> configPreferences;
+        public static RhField<ArrayList<FeatureInfo>> reqFeatures;
+        public static RhField<Signature[]> mSignatures;
     }
 
     public static class PermissionRef {

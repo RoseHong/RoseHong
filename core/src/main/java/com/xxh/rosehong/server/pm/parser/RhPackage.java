@@ -1,6 +1,10 @@
 package com.xxh.rosehong.server.pm.parser;
 
 import android.content.pm.ApplicationInfo;
+import android.content.pm.ConfigurationInfo;
+import android.content.pm.FeatureInfo;
+import android.content.pm.Signature;
+import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -36,6 +40,8 @@ public class RhPackage implements Parcelable {
     public int mSharedUserLabel;
     public Object mExtras;
     public boolean use32bitAbi;
+    public Bundle mAppMetaData;
+    public int mPreferredOrder;
 
     public ApplicationInfo applicationInfo;
     public ArrayList<RhPermission> permissions = new ArrayList<>(0);
@@ -47,10 +53,16 @@ public class RhPackage implements Parcelable {
     public ArrayList<RhInstrumentation> instrumentation = new ArrayList<>(0);
 
     public ArrayList<String> requestedPermissions = new ArrayList<>();
+    public ArrayList<String> usesLibraries;
+    public ArrayList<String> usesOptionalLibraries;
+    public ArrayList<ConfigurationInfo> configPreferences;
+    public ArrayList<FeatureInfo> reqFeatures;
+    public Signature[] mSignatures;
 
     public RhPackage() {}
 
     protected RhPackage(Parcel in) {
+
     }
 
     public static final Creator<RhPackage> CREATOR = new Creator<RhPackage>() {
