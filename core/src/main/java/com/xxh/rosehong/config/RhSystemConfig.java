@@ -11,6 +11,11 @@ package com.xxh.rosehong.config;
  */
 public class RhSystemConfig {
     /**
+     * 定义运行的CPU环境
+     */
+    public static final String MAIN_CPU_ABI = "arm64-v8a";
+
+    /**
      * 初始化服务进程的方法名
      */
     public static final String SERVER_INIT_METHOD = "@";

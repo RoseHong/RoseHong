@@ -53,4 +53,12 @@ public class RhBuild {
         return Build.VERSION.SDK_INT > VERSION_CODE.S ||
                 Build.VERSION.SDK_INT == VERSION_CODE.S && getPreviewSDKInt() > 0;
     }
+
+    public static boolean isAbi64(String abi) {
+        return "arm64-v8a".equals(abi) || "x86_64".equals(abi) || "mips64".equals(abi);
+    }
+
+    public static boolean isAbi32(String abi) {
+        return "armeabi".equals(abi) || "armeabi-v7a".equals(abi) || "mips".equals(abi) || "x86".equals(abi);
+    }
 }

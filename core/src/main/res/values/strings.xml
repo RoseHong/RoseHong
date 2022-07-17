@@ -2,4 +2,11 @@
 <resources>
     <string name="core_installer_fail_package_broken">安装包损坏</string>
     <string name="core_installer_fail_package_parser">安装包解析错误</string>
+    <string name="core_installer_fail_folder_create">安装路径创建失败</string>
+    <string name="core_installer_fail_file_base_create">base.apk创建失败</string>
+    <string name="core_installer_fail_file_base_copy">base.apk拷贝失败</string>
+    <string name="core_installer_fail_file_split_create">split_x.apk创建失败</string>
+    <string name="core_installer_fail_file_split_copy">split_x.apk拷贝失败</string>
+    <string name="core_installer_fail_cup_abi_unsupported">不被支持的CpuAbi</string>
+    <string name="core_installer_fail_file_lib_create">lib文件夹创建失败</string>
 </resources>

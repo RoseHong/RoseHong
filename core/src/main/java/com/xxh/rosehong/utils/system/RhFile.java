@@ -28,20 +28,27 @@ public class RhFile {
         }
     }
 
-    public static void copyFile(String srcPath, String destPath) {
+    public static void copyFile(String srcPath, String destPath) throws IOException {
         copyFile(new File(srcPath), new File(destPath));
     }
-    public static void copyFile(File srcFile, File destFile) {
+    public static void copyFile(File srcFile, File destFile) throws IOException {
+        FileInputStream fileInputStream = null;
+        FileOutputStream fileOutputStream = null;
         try {
-            FileInputStream fileInputStream = new FileInputStream(srcFile);
-            FileOutputStream fileOutputStream = new FileOutputStream(destFile);
+            fileInputStream = new FileInputStream(srcFile);
+            fileOutputStream = new FileOutputStream(destFile);
             byte[] bytes = new byte[1024];
             int len;
             while ((len = fileInputStream.read(bytes)) > 0) {
                 fileOutputStream.write(bytes, 0, len);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } finally {
+            try {
+                fileInputStream.close();
+                fileOutputStream.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 

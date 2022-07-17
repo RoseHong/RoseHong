@@ -1,15 +1,22 @@
 package com.xxh.rosehong.server.pm;
 
 import android.content.Context;
+import android.os.Build;
+import android.text.TextUtils;
 
 import com.xxh.rosehong.R;
+import com.xxh.rosehong.config.RhCustomConfig;
+import com.xxh.rosehong.config.RhSystemConfig;
+import com.xxh.rosehong.framework.ref.android.internal.content.NativeLibraryHelperRef;
 import com.xxh.rosehong.model.RhInstallResMod;
 import com.xxh.rosehong.server.pm.parser.RhPackage;
 import com.xxh.rosehong.server.pm.parser.RhPackageParser;
+import com.xxh.rosehong.utils.system.RhBuild;
 import com.xxh.rosehong.utils.system.RhFile;
 import com.xxh.rosehong.utils.system.zip.RhZipUtil;
 
 import java.io.File;
+import java.io.IOException;
 
 /**
  * @author xxh
@@ -30,13 +37,103 @@ public class RhPackageInstaller {
         if (packageFile == null) {
             return RhInstallResMod.failed(getResourceString(R.string.core_installer_fail_package_broken));
         }
-        RhPackage rhPackage = null;
+        RhPackage rhPackage;
         try {
             rhPackage = RhPackageParser.parsePackage(packageFile);
         } catch (Throwable e) {
             return RhInstallResMod.failed(getResourceString(R.string.core_installer_fail_package_parser));
         }
+        File innerAppDir = RhCustomConfig.Helper.ensureInnerApkBasePathByPackageName(rhPackage.packageName);
+        if (innerAppDir == null) {
+            return RhInstallResMod.failed(getResourceString(R.string.core_installer_fail_folder_create));
+        }
+
+        //将apk文件全部拷贝到指定目录
+        File baseApk = RhCustomConfig.Helper.ensureInnerApkFileByPackageName(rhPackage.packageName, "base.apk");
+        if (baseApk == null) {
+            return RhInstallResMod.failed(getResourceString(R.string.core_installer_fail_file_base_create));
+        }
+        try {
+            RhFile.copyFile(new File(rhPackage.baseCodePath), baseApk);
+            rhPackage.baseCodePath = baseApk.getAbsolutePath();
+        } catch (IOException e) {
+            RhFile.deleteDeep(RhCustomConfig.Helper.ensureInnerApkBasePathByPackageName(rhPackage.packageName));
+            return RhInstallResMod.failed(getResourceString(R.string.core_installer_fail_file_base_copy));
+        }
+        if (isSplitApk(rhPackage)) {
+            //split apk也要都拷贝
+            for (int i=0; i<rhPackage.splitNames.length; i++) {
+                String splitApkName = "split_" + rhPackage.splitNames[i] + ".apk";
+                File splitApk = RhCustomConfig.Helper.ensureInnerApkFileByPackageName(rhPackage.packageName, splitApkName);
+                if (splitApk == null) {
+                    RhFile.deleteDeep(RhCustomConfig.Helper.ensureInnerApkBasePathByPackageName(rhPackage.packageName));
+                    return RhInstallResMod.failed(getResourceString(R.string.core_installer_fail_file_base_create));
+                }
+                try {
+                    RhFile.copyFile(new File(rhPackage.splitCodePaths[i]), splitApk);
+                    rhPackage.splitCodePaths[i] = splitApk.getAbsolutePath();
+                } catch (Exception e) {
+                    RhFile.deleteDeep(RhCustomConfig.Helper.ensureInnerApkBasePathByPackageName(rhPackage.packageName));
+                    return RhInstallResMod.failed(getResourceString(R.string.core_installer_fail_file_split_copy));
+                }
+            }
+        }
+
+        //将所需.so文件拷贝到lib文件夹
+        Object handle = NativeLibraryHelperRef.HandleRef.create.call(packageFile);
+        String packageCpuAbi = getPackageCupAbi(handle, rhPackage.use32bitAbi);
+        if (TextUtils.isEmpty(packageCpuAbi)) {
+            RhFile.deleteDeep(RhCustomConfig.Helper.ensureInnerApkBasePathByPackageName(rhPackage.packageName));
+            return RhInstallResMod.failed(getResourceString(R.string.core_installer_fail_cup_abi_unsupported));
+        }
+        File libPath = RhCustomConfig.Helper.ensureInnerApkFileByPackageName(rhPackage.packageName, "lib/");
+        if (libPath == null) {
+            RhFile.deleteDeep(RhCustomConfig.Helper.ensureInnerApkBasePathByPackageName(rhPackage.packageName));
+            return RhInstallResMod.failed(getResourceString(R.string.core_installer_fail_file_lib_create));
+        }
+        NativeLibraryHelperRef.copyNativeBinaries.call(handle, libPath, packageCpuAbi);
+
         return RhInstallResMod.success();
+    }
+
+    private String getPackageCupAbi(Object handle, boolean use32bitAbi) {
+        //如果主进程不支持32位的话，那就返回空，让其安装失败
+        if (use32bitAbi && !RhBuild.isAbi32(RhSystemConfig.MAIN_CPU_ABI)) {
+            return "";
+        }
+        if (use32bitAbi) {
+            int idx = NativeLibraryHelperRef.findSupportedAbi.call(handle, Build.SUPPORTED_32_BIT_ABIS);
+            if (idx >= 0) {
+                return Build.SUPPORTED_32_BIT_ABIS[idx];
+            }
+        } else {
+            if (RhBuild.isAbi32(RhSystemConfig.MAIN_CPU_ABI)) {
+                int idx = NativeLibraryHelperRef.findSupportedAbi.call(handle, Build.SUPPORTED_32_BIT_ABIS);
+                if (idx >= 0) {
+                    return Build.SUPPORTED_32_BIT_ABIS[idx];
+                }
+            } else {
+                int idx = NativeLibraryHelperRef.findSupportedAbi.call(handle, Build.SUPPORTED_64_BIT_ABIS);
+                if (idx >= 0) {
+                    return Build.SUPPORTED_64_BIT_ABIS[idx];
+                }
+            }
+        }
+
+        //这种情况一般是32和64都支持，所以返回跟主进程一样就可以了
+        return RhSystemConfig.MAIN_CPU_ABI;
+    }
+
+    private boolean isSplitApk(RhPackage rhPackage) {
+        if (rhPackage == null) {
+            return false;
+        }
+
+        if (rhPackage.splitNames == null || rhPackage.splitNames.length < 1) {
+            return false;
+        }
+
+        return true;
     }
 
     private String getResourceString(int res) {
