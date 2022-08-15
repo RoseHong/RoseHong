@@ -1,6 +1,7 @@
 package com.xxh.rosehong.framework.ref.android.internal.content;
 
 import com.xxh.rosehong.utils.ref.RhClass;
+import com.xxh.rosehong.utils.ref.RhField;
 import com.xxh.rosehong.utils.ref.RhMethodParams;
 import com.xxh.rosehong.utils.ref.RhMethodStrings;
 import com.xxh.rosehong.utils.ref.RhStaticMethod;
@@ -21,6 +22,7 @@ public class NativeLibraryHelperRef {
 
     public static class HandleRef {
         public static Class<?> REF = RhClass.init(HandleRef.class, "com.android.internal.content.NativeLibraryHelper$Handle");
+        public static RhField<Boolean> extractNativeLibs;
         @RhMethodParams(File.class)
         public static RhStaticMethod<Object> create;
     }

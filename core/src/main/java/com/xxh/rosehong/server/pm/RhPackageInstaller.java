@@ -11,6 +11,7 @@ import com.xxh.rosehong.framework.ref.android.internal.content.NativeLibraryHelp
 import com.xxh.rosehong.model.RhInstallResMod;
 import com.xxh.rosehong.server.pm.parser.RhPackage;
 import com.xxh.rosehong.server.pm.parser.RhPackageParser;
+import com.xxh.rosehong.server.refit.RhApplicationInfoRefit;
 import com.xxh.rosehong.utils.system.RhBuild;
 import com.xxh.rosehong.utils.system.RhFile;
 import com.xxh.rosehong.utils.system.zip.RhZipUtil;
@@ -81,6 +82,7 @@ public class RhPackageInstaller {
 
         //将所需.so文件拷贝到lib文件夹
         Object handle = NativeLibraryHelperRef.HandleRef.create.call(packageFile);
+        NativeLibraryHelperRef.HandleRef.extractNativeLibs.set(handle, true);
         String packageCpuAbi = getPackageCupAbi(handle, rhPackage.use32bitAbi);
         if (TextUtils.isEmpty(packageCpuAbi)) {
             RhFile.deleteDeep(RhCustomConfig.Helper.ensureInnerApkBasePathByPackageName(rhPackage.packageName));
@@ -92,6 +94,11 @@ public class RhPackageInstaller {
             return RhInstallResMod.failed(getResourceString(R.string.core_installer_fail_file_lib_create));
         }
         NativeLibraryHelperRef.copyNativeBinaries.call(handle, libPath, packageCpuAbi);
+
+        // 对applicationInfo进行修正
+        RhApplicationInfoRefit rhApplicationInfoRefit = new RhApplicationInfoRefit(rhPackage.applicationInfo,
+                rhPackage.usesLibraries, rhPackage.usesOptionalLibraries);
+        rhPackage.applicationInfo = rhApplicationInfoRefit.doRefit();
 
         return RhInstallResMod.success();
     }
