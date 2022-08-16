@@ -44,13 +44,13 @@ public class RhPackageInstaller {
         } catch (Throwable e) {
             return RhInstallResMod.failed(getResourceString(R.string.core_installer_fail_package_parser));
         }
-        File innerAppDir = RhCustomConfig.Helper.ensureInnerApkBasePathByPackageName(rhPackage.packageName);
+        File innerAppDir = RhCustomConfig.Helper.ensureInnerApkPackageDir(rhPackage.packageName);
         if (innerAppDir == null) {
             return RhInstallResMod.failed(getResourceString(R.string.core_installer_fail_folder_create));
         }
 
         //将apk文件全部拷贝到指定目录
-        File baseApk = RhCustomConfig.Helper.ensureInnerApkFileByPackageName(rhPackage.packageName, "base.apk");
+        File baseApk = RhCustomConfig.Helper.ensureInnerApkBaseFile(rhPackage.packageName);
         if (baseApk == null) {
             return RhInstallResMod.failed(getResourceString(R.string.core_installer_fail_file_base_create));
         }
@@ -58,23 +58,23 @@ public class RhPackageInstaller {
             RhFile.copyFile(new File(rhPackage.baseCodePath), baseApk);
             rhPackage.baseCodePath = baseApk.getAbsolutePath();
         } catch (IOException e) {
-            RhFile.deleteDeep(RhCustomConfig.Helper.ensureInnerApkBasePathByPackageName(rhPackage.packageName));
+            RhFile.deleteDeep(RhCustomConfig.Helper.ensureInnerApkPackageDir(rhPackage.packageName));
             return RhInstallResMod.failed(getResourceString(R.string.core_installer_fail_file_base_copy));
         }
-        if (isSplitApk(rhPackage)) {
+        if (rhPackage.isSplitApk()) {
             //split apk也要都拷贝
             for (int i=0; i<rhPackage.splitNames.length; i++) {
-                String splitApkName = "split_" + rhPackage.splitNames[i] + ".apk";
-                File splitApk = RhCustomConfig.Helper.ensureInnerApkFileByPackageName(rhPackage.packageName, splitApkName);
+                String splitName = rhPackage.splitNames[i];
+                File splitApk = RhCustomConfig.Helper.ensureInnerApkSplitFile(rhPackage.packageName, splitName);
                 if (splitApk == null) {
-                    RhFile.deleteDeep(RhCustomConfig.Helper.ensureInnerApkBasePathByPackageName(rhPackage.packageName));
+                    RhFile.deleteDeep(RhCustomConfig.Helper.ensureInnerApkPackageDir(rhPackage.packageName));
                     return RhInstallResMod.failed(getResourceString(R.string.core_installer_fail_file_base_create));
                 }
                 try {
                     RhFile.copyFile(new File(rhPackage.splitCodePaths[i]), splitApk);
                     rhPackage.splitCodePaths[i] = splitApk.getAbsolutePath();
                 } catch (Exception e) {
-                    RhFile.deleteDeep(RhCustomConfig.Helper.ensureInnerApkBasePathByPackageName(rhPackage.packageName));
+                    RhFile.deleteDeep(RhCustomConfig.Helper.ensureInnerApkPackageDir(rhPackage.packageName));
                     return RhInstallResMod.failed(getResourceString(R.string.core_installer_fail_file_split_copy));
                 }
             }
@@ -83,27 +83,31 @@ public class RhPackageInstaller {
         //将所需.so文件拷贝到lib文件夹
         Object handle = NativeLibraryHelperRef.HandleRef.create.call(packageFile);
         NativeLibraryHelperRef.HandleRef.extractNativeLibs.set(handle, true);
-        String packageCpuAbi = getPackageCupAbi(handle, rhPackage.use32bitAbi);
-        if (TextUtils.isEmpty(packageCpuAbi)) {
-            RhFile.deleteDeep(RhCustomConfig.Helper.ensureInnerApkBasePathByPackageName(rhPackage.packageName));
+        String packageSureCpuAbi = getPackageSureCupAbi(handle, rhPackage.use32bitAbi);
+        if (TextUtils.isEmpty(packageSureCpuAbi)) {
+            RhFile.deleteDeep(RhCustomConfig.Helper.ensureInnerApkPackageDir(rhPackage.packageName));
             return RhInstallResMod.failed(getResourceString(R.string.core_installer_fail_cup_abi_unsupported));
         }
-        File libPath = RhCustomConfig.Helper.ensureInnerApkFileByPackageName(rhPackage.packageName, "lib/");
+        File libPath = RhCustomConfig.Helper.ensureInnerApkLibDir(rhPackage.packageName);
         if (libPath == null) {
-            RhFile.deleteDeep(RhCustomConfig.Helper.ensureInnerApkBasePathByPackageName(rhPackage.packageName));
+            RhFile.deleteDeep(RhCustomConfig.Helper.ensureInnerApkPackageDir(rhPackage.packageName));
             return RhInstallResMod.failed(getResourceString(R.string.core_installer_fail_file_lib_create));
         }
-        NativeLibraryHelperRef.copyNativeBinaries.call(handle, libPath, packageCpuAbi);
+        NativeLibraryHelperRef.copyNativeBinaries.call(handle, libPath, packageSureCpuAbi);
 
         // 对applicationInfo进行修正
-        RhApplicationInfoRefit rhApplicationInfoRefit = new RhApplicationInfoRefit(rhPackage.applicationInfo,
-                rhPackage.usesLibraries, rhPackage.usesOptionalLibraries);
-        rhPackage.applicationInfo = rhApplicationInfoRefit.doRefit();
+        rhPackage.applicationInfo = RhApplicationInfoRefit.Builder.create()
+                .setApplicationInfo(rhPackage.applicationInfo)
+                .setUseLibraries(rhPackage.usesLibraries, rhPackage.usesOptionalLibraries)
+                .setCpuAbi(packageSureCpuAbi)
+                .setSplitApk(rhPackage.isSplitApk())
+                .setSplitCodePaths(rhPackage.splitCodePaths)
+                .doRefit();
 
         return RhInstallResMod.success();
     }
 
-    private String getPackageCupAbi(Object handle, boolean use32bitAbi) {
+    private String getPackageSureCupAbi(Object handle, boolean use32bitAbi) {
         //如果主进程不支持32位的话，那就返回空，让其安装失败
         if (use32bitAbi && !RhBuild.isAbi32(RhSystemConfig.MAIN_CPU_ABI)) {
             return "";
@@ -129,18 +133,6 @@ public class RhPackageInstaller {
 
         //这种情况一般是32和64都支持，所以返回跟主进程一样就可以了
         return RhSystemConfig.MAIN_CPU_ABI;
-    }
-
-    private boolean isSplitApk(RhPackage rhPackage) {
-        if (rhPackage == null) {
-            return false;
-        }
-
-        if (rhPackage.splitNames == null || rhPackage.splitNames.length < 1) {
-            return false;
-        }
-
-        return true;
     }
 
     private String getResourceString(int res) {

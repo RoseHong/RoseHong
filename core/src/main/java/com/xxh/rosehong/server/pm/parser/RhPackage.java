@@ -65,6 +65,13 @@ public class RhPackage implements Parcelable {
 
     }
 
+    public boolean isSplitApk() {
+        if (splitNames == null || splitNames.length < 1) {
+            return false;
+        }
+        return true;
+    }
+
     public static final Creator<RhPackage> CREATOR = new Creator<RhPackage>() {
         @Override
         public RhPackage createFromParcel(Parcel in) {

@@ -38,25 +38,46 @@ public class RhCustomConfig {
 
         /**
          * 内部apk文件的存放根路径，如：/data/data/hostPackageName/inner/packageName/
-         * @param packageName 包名
-         * @return 路径
          */
-        public static File getInnerApkBasePathByPackageName(String packageName) {
+        public static File getInnerApkPackageDir(String packageName) {
             return new File(INNER_APK_ROOT_PATH + packageName + "/");
         }
-        public static File ensureInnerApkBasePathByPackageName(String packageName) {
-            File dir = getInnerApkBasePathByPackageName(packageName);
-            if (dir == null || !dir.isDirectory()) {
-                return null;
-            }
-            if (!dir.exists() && !dir.mkdirs()) {
-                return null;
-            }
-            return dir;
+        public static File ensureInnerApkPackageDir(String packageName) {
+            File dir = getInnerApkPackageDir(packageName);
+            return ensureFile(dir);
         }
-        public static File ensureInnerApkFileByPackageName(String packageName, String file) {
-            File dir = ensureInnerApkBasePathByPackageName(packageName);
-            return ensureFile(new File(dir, file));
+
+        /**
+         * 内部apk文件的存放根路径，如：/data/data/hostPackageName/inner/packageName/lib/
+         */
+        public static File getInnerApkLibDir(String packageName) {
+            return new File(getInnerApkPackageDir(packageName), "/lib");
+        }
+        public static File ensureInnerApkLibDir(String packageName) {
+            File dir = getInnerApkLibDir(packageName);
+            return ensureFile(dir);
+        }
+
+        /**
+         * 内部apk文件的存放根路径，如：/data/data/hostPackageName/inner/packageName/base.apk
+         */
+        public static File getInnerApkBaseFile(String packageName) {
+            return new File(getInnerApkPackageDir(packageName), "base.apk");
+        }
+        public static File ensureInnerApkBaseFile(String packageName) {
+            File file = getInnerApkBaseFile(packageName);
+            return ensureFile(file);
+        }
+
+        /**
+         * 内部apk文件的存放根路径，如：/data/data/hostPackageName/inner/packageName/split_{$splitName}.apk
+         */
+        public static File getInnerApkSplitFile(String packageName, String splitName) {
+            return new File(getInnerApkPackageDir(packageName), String.format("split_%s.apk", splitName));
+        }
+        public static File ensureInnerApkSplitFile(String packageName, String splitName) {
+            File file = getInnerApkSplitFile(packageName, splitName);
+            return ensureFile(file);
         }
     }
 }

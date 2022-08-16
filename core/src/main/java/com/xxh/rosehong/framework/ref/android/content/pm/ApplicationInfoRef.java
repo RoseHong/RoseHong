@@ -16,4 +16,7 @@ import java.util.List;
 public class ApplicationInfoRef {
     public static Class<?> REF = RhClass.init(ApplicationInfoRef.class, ApplicationInfo.class);
     public static RhField<List<SharedLibraryInfo>> sharedLibraryInfos;
+    public static RhField<String> primaryCpuAbi;
+    public static RhField<String> nativeLibraryRootDir;
+    public static RhField<String> nativeLibraryDir;
 }
