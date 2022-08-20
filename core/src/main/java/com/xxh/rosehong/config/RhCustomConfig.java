@@ -79,5 +79,16 @@ public class RhCustomConfig {
             File file = getInnerApkSplitFile(packageName, splitName);
             return ensureFile(file);
         }
+
+        /**
+         * 内部apk文件的存放根路径，如：/data/data/hostPackageName/inner/packageName/opt/
+         */
+        public static File getInnerApkOptDir(String packageName) {
+            return new File(getInnerApkPackageDir(packageName), "opt/");
+        }
+        public static File ensureInnerApkOptDir(String packageName) {
+            File dir = getInnerApkOptDir(packageName);
+            return ensureFile(dir);
+        }
     }
 }

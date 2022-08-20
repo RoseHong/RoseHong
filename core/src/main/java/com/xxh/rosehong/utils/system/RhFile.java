@@ -1,5 +1,7 @@
 package com.xxh.rosehong.utils.system;
 
+import android.system.ErrnoException;
+import android.system.Os;
 import android.text.TextUtils;
 
 import java.io.File;
@@ -88,5 +90,20 @@ public class RhFile {
             }
         }
         file.delete();
+    }
+
+    public static void chmod(File file, int mode) {
+        if (file == null) {
+            return;
+        }
+        try {
+            File parentFile = file.getParentFile();
+            if (parentFile != null) {
+                Os.chmod(parentFile.getAbsolutePath(), mode);
+            }
+            Os.chmod(file.getAbsolutePath(), mode);
+        } catch (ErrnoException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -13,6 +13,8 @@ import com.xxh.rosehong.server.pm.parser.RhPackage;
 import com.xxh.rosehong.server.pm.parser.RhPackageParser;
 import com.xxh.rosehong.server.refit.RhApplicationInfoRefit;
 import com.xxh.rosehong.utils.system.RhBuild;
+import com.xxh.rosehong.utils.system.RhChmodMode;
+import com.xxh.rosehong.utils.system.RhDexOptimizer;
 import com.xxh.rosehong.utils.system.RhFile;
 import com.xxh.rosehong.utils.system.zip.RhZipUtil;
 
@@ -103,6 +105,14 @@ public class RhPackageInstaller {
                 .setSplitApk(rhPackage.isSplitApk())
                 .setSplitCodePaths(rhPackage.splitCodePaths)
                 .doRefit();
+
+        // oat一下，提高运行速度
+        RhDexOptimizer.optimizeDex(baseApk.getAbsolutePath(),
+                RhCustomConfig.Helper.ensureInnerApkOptDir(rhPackage.packageName).getAbsolutePath(),
+                libPath.getAbsolutePath());
+
+        // 设置路径rwx权限
+        RhFile.chmod(innerAppDir, RhChmodMode.MODE_777);
 
         return RhInstallResMod.success();
     }
