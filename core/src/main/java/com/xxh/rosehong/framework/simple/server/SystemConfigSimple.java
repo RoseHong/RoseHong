@@ -1,4 +1,4 @@
-package com.xxh.rosehong.framework.simple;
+package com.xxh.rosehong.framework.simple.server;
 
 /**
  * @author xxh

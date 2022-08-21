@@ -8,7 +8,7 @@ import android.os.Build;
 import com.xxh.rosehong.config.RhCustomConfig;
 import com.xxh.rosehong.framework.ref.android.content.pm.ApplicationInfoRef;
 import com.xxh.rosehong.framework.ref.android.content.pm.SharedLibraryInfoRef;
-import com.xxh.rosehong.framework.simple.SystemConfigSimple;
+import com.xxh.rosehong.framework.simple.server.SystemConfigSimple;
 import com.xxh.rosehong.utils.system.RhBuild;
 import com.xxh.rosehong.utils.system.RhLog;
 

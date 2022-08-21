@@ -8,6 +8,7 @@ import com.xxh.rosehong.R;
 import com.xxh.rosehong.config.RhCustomConfig;
 import com.xxh.rosehong.config.RhSystemConfig;
 import com.xxh.rosehong.framework.ref.android.internal.content.NativeLibraryHelperRef;
+import com.xxh.rosehong.framework.simple.os.UserHandleSimple;
 import com.xxh.rosehong.model.RhInstallResMod;
 import com.xxh.rosehong.server.pm.parser.RhPackage;
 import com.xxh.rosehong.server.pm.parser.RhPackageParser;
@@ -113,6 +114,13 @@ public class RhPackageInstaller {
 
         // 设置路径rwx权限
         RhFile.chmod(innerAppDir, RhChmodMode.MODE_777);
+
+        // 记录一些特定信息便于使用且其可用于判断应用是否安装等，与PackageSetting类似
+        RhPackageSetting packageSetting = new RhPackageSetting();
+        packageSetting.setPackageName(rhPackage.packageName);
+        packageSetting.setCpuAbi(packageSureCpuAbi);
+        // TODO: 需要实现uid管理系统，需要从uid管理系统里获得一个内部app专属的uid
+        packageSetting.setAppId(UserHandleSimple.getAppId(0));
 
         return RhInstallResMod.success();
     }
