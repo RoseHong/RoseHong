@@ -8,8 +8,7 @@ import android.os.Build;
 import com.xxh.rosehong.config.RhCustomConfig;
 import com.xxh.rosehong.framework.ref.android.content.pm.ApplicationInfoRef;
 import com.xxh.rosehong.framework.ref.android.content.pm.SharedLibraryInfoRef;
-import com.xxh.rosehong.framework.simple.SystemConfig;
-import com.xxh.rosehong.server.pm.parser.RhPackage;
+import com.xxh.rosehong.framework.simple.SystemConfigSimple;
 import com.xxh.rosehong.utils.system.RhBuild;
 import com.xxh.rosehong.utils.system.RhLog;
 
@@ -90,11 +89,11 @@ public class RhApplicationInfoRefit {
         Iterator<String> iterator = mAllUseLibraries.iterator();
         while (iterator.hasNext()) {
             String name = iterator.next();
-            SystemConfig.SharedLibraryEntry entry = SystemConfig.getInstance().getSharedLibrariesEntry(name);
+            SystemConfigSimple.SharedLibraryEntry entry = SystemConfigSimple.getInstance().getSharedLibrariesEntry(name);
             if (entry == null) {
                 if (ORG_APACHE_HTTP_LEGACY_NAME.equals(name)) {
                     // apache这种情况下得自带
-                    entry = new SystemConfig.SharedLibraryEntry(name, ORG_APACHE_HTTP_LEGACY_JAR, null);
+                    entry = new SystemConfigSimple.SharedLibraryEntry(name, ORG_APACHE_HTTP_LEGACY_JAR, null);
                 } else {
                     RhLog.e(TAG, "system no this shared library: " + name);
                     continue;

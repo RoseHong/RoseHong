@@ -26,10 +26,10 @@ import java.io.IOException;
  * 故，这里需要用到mShareLibraries成员，为了省内存，也没必要把/etc/permission/和/etc/sysconfig/里所有的文件都解析并缓存起来，
  * 所以这里只需要处理mShareLibraries即可。
  */
-public class SystemConfig {
-    private static final String TAG = SystemConfig.class.getSimpleName();
+public class SystemConfigSimple {
+    private static final String TAG = SystemConfigSimple.class.getSimpleName();
 
-    private static SystemConfig sInstance;
+    private static SystemConfigSimple sInstance;
 
     public static final class SharedLibraryEntry {
         public final String name;
@@ -45,10 +45,10 @@ public class SystemConfig {
 
     final ArrayMap<String, SharedLibraryEntry> mSharedLibraries = new ArrayMap<>();
 
-    public static SystemConfig getInstance() {
-        synchronized (SystemConfig.class) {
+    public static SystemConfigSimple getInstance() {
+        synchronized (SystemConfigSimple.class) {
             if (sInstance == null) {
-                sInstance = new SystemConfig();
+                sInstance = new SystemConfigSimple();
             }
             return sInstance;
         }
@@ -62,7 +62,7 @@ public class SystemConfig {
         return getSharedLibraries().get(name);
     }
 
-    public SystemConfig() {
+    public SystemConfigSimple() {
         readAllPermissions();
     }
 
