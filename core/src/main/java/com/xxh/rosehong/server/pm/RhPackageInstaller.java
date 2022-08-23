@@ -9,6 +9,7 @@ import com.xxh.rosehong.config.RhCustomConfig;
 import com.xxh.rosehong.config.RhSystemConfig;
 import com.xxh.rosehong.framework.ref.android.internal.content.NativeLibraryHelperRef;
 import com.xxh.rosehong.framework.simple.os.UserHandleSimple;
+import com.xxh.rosehong.framework.simple.server.pm.AppIdSettingMapSimple;
 import com.xxh.rosehong.model.RhInstallResMod;
 import com.xxh.rosehong.server.pm.parser.RhPackage;
 import com.xxh.rosehong.server.pm.parser.RhPackageParser;
@@ -119,8 +120,12 @@ public class RhPackageInstaller {
         RhPackageSetting packageSetting = new RhPackageSetting();
         packageSetting.setPackageName(rhPackage.packageName);
         packageSetting.setCpuAbi(packageSureCpuAbi);
-        // TODO: 需要实现uid管理系统，需要从uid管理系统里获得一个内部app专属的uid
-        packageSetting.setAppId(UserHandleSimple.getAppId(0));
+        // 获得一个内部app专属的uid
+        String sharedUserId = rhPackage.mSharedUserId;
+        if (sharedUserId == null) {
+            sharedUserId = rhPackage.packageName;
+        }
+        packageSetting.setAppId(UserHandleSimple.getAppId(AppIdSettingMapSimple.get().getAppId(sharedUserId)));
 
         return RhInstallResMod.success();
     }
