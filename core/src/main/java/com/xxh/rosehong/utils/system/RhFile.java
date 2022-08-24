@@ -4,6 +4,8 @@ import android.system.ErrnoException;
 import android.system.Os;
 import android.text.TextUtils;
 
+import java.io.ByteArrayOutputStream;
+import java.io.Closeable;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -105,5 +107,31 @@ public class RhFile {
         } catch (ErrnoException e) {
             e.printStackTrace();
         }
+    }
+
+    public static void closeQuietly(Closeable closeable) {
+        if (closeable != null) {
+            try {
+                closeable.close();
+            } catch (Exception ignored) {
+            }
+        }
+    }
+
+    public static byte[] readFromInputStream(InputStream inputStream) {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        byte[] bytes = new byte[1024];
+        try {
+            int len;
+            while ((len = inputStream.read(bytes, 0, 1024)) > 0) {
+                outputStream.write(bytes, 0, len);
+            }
+            return outputStream.toByteArray();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            closeQuietly(outputStream);
+        }
+        return new byte[0];
     }
 }

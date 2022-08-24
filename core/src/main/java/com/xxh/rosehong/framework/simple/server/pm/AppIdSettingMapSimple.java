@@ -9,9 +9,11 @@ package com.xxh.rosehong.framework.simple.server.pm;
 import android.os.Process;
 import android.util.ArrayMap;
 
-import com.xxh.rosehong.config.RhCustomConfig;
+import com.xxh.rosehong.config.RhSystemConfig;
+import com.xxh.rosehong.utils.storage.RhStorageUtils;
 import com.xxh.rosehong.utils.system.RhLog;
 
+import java.io.File;
 import java.util.ArrayList;
 
 /**
@@ -26,6 +28,7 @@ public class AppIdSettingMapSimple {
     private ArrayMap<String, SharedUserSetting> mSharedUsers = new ArrayMap<>();
     private ArrayList<SharedUserSetting> mNonSystemSettings = new ArrayList<>();
     private ArrayList<SharedUserSetting> mSystemSettings = new ArrayList<>();
+    private File mStorageFile = new File(RhSystemConfig.RhSystemFile.APP_ID_STORAGE_FILE);
 
     public static AppIdSettingMapSimple get() {
         if (sInstance == null) {
@@ -33,6 +36,36 @@ public class AppIdSettingMapSimple {
             // TODO: 从file/db加载，并调用registerExistingAppId进行注册
         }
         return sInstance;
+    }
+
+    private AppIdSettingMapSimple() {
+        loadDataStorage();
+    }
+
+    private void loadDataStorage() {
+        RhStorageUtils.load(mStorageFile, parcel -> {
+            if (!mNonSystemSettings.isEmpty()) {
+                mNonSystemSettings.clear();
+                int size = parcel.readInt();
+                for (int i=0; i<size; i++) {
+                    int appId = parcel.readInt();
+                    SharedUserSetting setting = new SharedUserSetting();
+                    setting.mAppId = appId;
+                    setFirstAvailableAppId(appId);
+                    // TODO: 下面这个方法是直接抄FrameWork的，有点复杂了，得进行精简
+                    registerExistingAppId(appId, setting);
+                }
+            }
+        });
+    }
+
+    private void saveDataStorage() {
+        RhStorageUtils.save(mStorageFile, parcel -> {
+            parcel.writeInt(mNonSystemSettings.size());
+            for (SharedUserSetting setting : mNonSystemSettings) {
+                parcel.writeInt(setting.mAppId);
+            }
+        });
     }
 
     private boolean registerExistingAppId(int appId, SharedUserSetting setting) {
@@ -67,6 +100,7 @@ public class AppIdSettingMapSimple {
                 return -1;
             }
             RhLog.i(TAG, "New shared user" + sharedUserId + ": id=" + s.mAppId);
+            saveDataStorage();
         }
         return s.mAppId;
     }

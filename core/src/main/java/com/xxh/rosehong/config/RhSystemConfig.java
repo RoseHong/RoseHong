@@ -6,6 +6,8 @@ package com.xxh.rosehong.config;
  * @date 2022/2/4 上午12:52
  */
 
+import android.os.Environment;
+
 /**
  * 系统级别的配置文件，一般情况下都不需要修改
  */
@@ -37,5 +39,20 @@ public class RhSystemConfig {
     public static class RhServiceManagerName {
         public static final String PACKAGE = "package";
         public static final String ACTIVITY = "activity";
+    }
+
+    /**
+     * 定义保存系统数据的文件路径
+     */
+    public static class RhSystemFile {
+        /**
+         * 系统数据文件的根路径
+         */
+        private static final String SYSTEM_FILE_ROOT_PATH = Environment.getDataDirectory().getPath() + "/system/data/";
+
+        /**
+         * 已分配的appId存储文件
+         */
+        public static final String APP_ID_STORAGE_FILE = SYSTEM_FILE_ROOT_PATH + "app-id-setting.db";
     }
 }
