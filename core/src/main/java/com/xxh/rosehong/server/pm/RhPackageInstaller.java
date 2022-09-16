@@ -9,7 +9,6 @@ import com.xxh.rosehong.config.RhCustomConfig;
 import com.xxh.rosehong.config.RhSystemConfig;
 import com.xxh.rosehong.framework.ref.android.internal.content.NativeLibraryHelperRef;
 import com.xxh.rosehong.framework.simple.os.UserHandleSimple;
-import com.xxh.rosehong.framework.simple.server.pm.AppIdSettingMapSimple;
 import com.xxh.rosehong.model.RhInstallResMod;
 import com.xxh.rosehong.server.pm.parser.RhPackage;
 import com.xxh.rosehong.server.pm.parser.RhPackageParser;
@@ -125,7 +124,7 @@ public class RhPackageInstaller {
         if (sharedUserId == null) {
             sharedUserId = rhPackage.packageName;
         }
-        packageSetting.setAppId(UserHandleSimple.getAppId(AppIdSettingMapSimple.get().getAppId(sharedUserId)));
+        packageSetting.setAppId(UserHandleSimple.getAppId(RhUidSettingMap.get().getUid(sharedUserId)));
 
         return RhInstallResMod.success();
     }

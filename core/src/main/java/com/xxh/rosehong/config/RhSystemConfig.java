@@ -51,8 +51,8 @@ public class RhSystemConfig {
         private static final String SYSTEM_FILE_ROOT_PATH = Environment.getDataDirectory().getPath() + "/system/data/";
 
         /**
-         * 已分配的appId存储文件
+         * 已分配的uid存储文件
          */
-        public static final String APP_ID_STORAGE_FILE = SYSTEM_FILE_ROOT_PATH + "app-id-setting.db";
+        public static final String UID_STORAGE_FILE = SYSTEM_FILE_ROOT_PATH + "uid-setting.db";
     }
 }
