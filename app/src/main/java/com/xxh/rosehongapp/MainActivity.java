@@ -14,6 +14,7 @@ import android.os.RemoteException;
 import android.util.Log;
 import android.view.View;
 
+import com.xxh.rosehong.client.mgr.RhPackageManager;
 import com.xxh.rosehong.utils.hooks.proxy.RhDynamicProxy;
 import com.xxh.rosehong.utils.hooks.proxy.RhDynamicProxyMethod;
 import com.xxh.rosehong.utils.hooks.proxy.RhDynamicProxyMethodParams;
@@ -129,5 +130,9 @@ public class MainActivity extends AppCompatActivity {
         HowProviderClient.getInstance().init(this);
         int res = HowBinderClient.getsInstance().callRemote(88);
         Log.e(MainActivity.class.getSimpleName(), "binderProviderOnClick: " + res);
+    }
+
+    public void testInstallApkOnClick(View view) {
+        RhPackageManager.get().installApkFromAsset("innerapptest-debug.apk");
     }
 }

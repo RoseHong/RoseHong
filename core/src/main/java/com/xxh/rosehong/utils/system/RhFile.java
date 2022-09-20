@@ -1,5 +1,6 @@
 package com.xxh.rosehong.utils.system;
 
+import android.content.Context;
 import android.system.ErrnoException;
 import android.system.Os;
 import android.text.TextUtils;
@@ -12,6 +13,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.UUID;
 
 /**
  * @author xxh
@@ -30,6 +32,23 @@ public class RhFile {
         while ((len = srcStream.read(buf)) > 0) {
             destStream.write(buf, 0, len);
         }
+    }
+
+    public static File createCacheFile(Context context, String extension) {
+        File dir = context.getCacheDir();
+        if (!dir.exists() && !dir.mkdirs()) {
+            return null;
+        }
+
+        if (!dir.canWrite()) {
+            return null;
+        }
+
+        File file = null;
+        while (file == null || file.exists()) {
+            file = new File(dir, UUID.randomUUID() + extension);
+        }
+        return file;
     }
 
     public static void copyFile(String srcPath, String destPath) throws IOException {
@@ -133,5 +152,13 @@ public class RhFile {
             closeQuietly(outputStream);
         }
         return new byte[0];
+    }
+
+    public static String getFileExtension(String fileName) {
+        int dotPos = fileName.lastIndexOf('.');
+        if (dotPos == -1) {
+            return "";
+        }
+        return fileName.substring(dotPos + 1);
     }
 }
