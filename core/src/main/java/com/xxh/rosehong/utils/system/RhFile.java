@@ -3,7 +3,9 @@ package com.xxh.rosehong.utils.system;
 import android.content.Context;
 import android.system.ErrnoException;
 import android.system.Os;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.util.Log;
 
 import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
@@ -46,7 +48,7 @@ public class RhFile {
 
         File file = null;
         while (file == null || file.exists()) {
-            file = new File(dir, UUID.randomUUID() + extension);
+            file = new File(dir, UUID.randomUUID() + "." + extension);
         }
         return file;
     }
@@ -65,6 +67,8 @@ public class RhFile {
             while ((len = fileInputStream.read(bytes)) > 0) {
                 fileOutputStream.write(bytes, 0, len);
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         } finally {
             try {
                 fileInputStream.close();

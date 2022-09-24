@@ -2,6 +2,8 @@ package com.xxh.rosehong.client;
 
 import android.content.Context;
 
+import com.xxh.rosehong.utils.ref.RhReflection;
+
 /**
  * @author xxh
  * @email mike_just@163.com
@@ -24,6 +26,7 @@ public class RhApp {
 
     public void attachContext(Context context) {
         mHostContext = context;
+        startEngine();
     }
 
     public Context getAppContext() {
@@ -32,5 +35,9 @@ public class RhApp {
 
     public Context getHostContext() {
         return mHostContext;
+    }
+
+    private void startEngine() {
+        RhReflection.bypassHiddenApi();
     }
 }

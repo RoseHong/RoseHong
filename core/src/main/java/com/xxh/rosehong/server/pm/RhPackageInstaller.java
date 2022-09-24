@@ -53,7 +53,7 @@ public class RhPackageInstaller {
         }
 
         //将apk文件全部拷贝到指定目录
-        File baseApk = RhCustomConfig.Helper.ensureInnerApkBaseFile(rhPackage.packageName);
+        File baseApk = RhCustomConfig.Helper.getInnerApkBaseFile(rhPackage.packageName);
         if (baseApk == null) {
             return RhInstallResMod.failed(getResourceString(R.string.core_installer_fail_file_base_create));
         }
@@ -68,7 +68,7 @@ public class RhPackageInstaller {
             //split apk也要都拷贝
             for (int i=0; i<rhPackage.splitNames.length; i++) {
                 String splitName = rhPackage.splitNames[i];
-                File splitApk = RhCustomConfig.Helper.ensureInnerApkSplitFile(rhPackage.packageName, splitName);
+                File splitApk = RhCustomConfig.Helper.getInnerApkSplitFile(rhPackage.packageName, splitName);
                 if (splitApk == null) {
                     RhFile.deleteDeep(RhCustomConfig.Helper.ensureInnerApkPackageDir(rhPackage.packageName));
                     return RhInstallResMod.failed(getResourceString(R.string.core_installer_fail_file_base_create));

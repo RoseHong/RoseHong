@@ -1,5 +1,7 @@
 package com.xxh.rosehong.utils.ref;
 
+import com.xxh.rosehong.utils.system.RhLog;
+
 import java.lang.reflect.Field;
 
 /**
@@ -7,7 +9,7 @@ import java.lang.reflect.Field;
  * @email mike_just@163.com
  * @date 2022/1/29 下午6:02
  */
-public class RhField<T> {
+public class RhField<T> extends RhRefBase {
     private static final String TAG = RhField.class.getSimpleName();
 
     private Field mRefField;
@@ -16,8 +18,10 @@ public class RhField<T> {
         try {
             mRefField = srcClass.getDeclaredField(refField.getName());
             mRefField.setAccessible(true);
+            mIsValid = true;
         } catch (NoSuchFieldException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
+            RhLog.w(TAG, "No field " + refField.getName() + " in class " + srcClass.getCanonicalName());
         }
     }
 

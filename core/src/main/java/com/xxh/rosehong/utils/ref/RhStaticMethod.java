@@ -1,5 +1,7 @@
 package com.xxh.rosehong.utils.ref;
 
+import com.xxh.rosehong.utils.system.RhLog;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -9,7 +11,7 @@ import java.lang.reflect.Method;
  * @email mike_just@163.com
  * @date 2022/2/1 下午5:34
  */
-public class RhStaticMethod<T> {
+public class RhStaticMethod<T> extends RhRefBase {
     private static final String TAG = RhStaticMethod.class.getSimpleName();
 
     private Method mRefStaticMethod;
@@ -24,8 +26,10 @@ public class RhStaticMethod<T> {
                 mRefStaticMethod = srcClass.getDeclaredMethod(staticMethodName);
             }
             mRefStaticMethod.setAccessible(true);
+            mIsValid = true;
         } catch (NoSuchMethodException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
+            RhLog.w(TAG, "No static method " + refField.getName() + " in class " + srcClass.getCanonicalName());
         }
     }
 

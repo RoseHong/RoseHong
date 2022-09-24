@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.View;
 
 import com.xxh.rosehong.client.mgr.RhPackageManager;
+import com.xxh.rosehong.model.RhInstallResMod;
 import com.xxh.rosehong.utils.hooks.proxy.RhDynamicProxy;
 import com.xxh.rosehong.utils.hooks.proxy.RhDynamicProxyMethod;
 import com.xxh.rosehong.utils.hooks.proxy.RhDynamicProxyMethodParams;
@@ -133,6 +134,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void testInstallApkOnClick(View view) {
-        RhPackageManager.get().installApkFromAsset("innerapptest-debug.apk");
+        RhInstallResMod res = RhPackageManager.get().installApkFromAsset("innerapptest-debug.apk");
+        Log.e(MainActivity.class.getSimpleName(), res.toString());
     }
 }

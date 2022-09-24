@@ -55,4 +55,8 @@ public class RhInstallResMod implements Parcelable {
         dest.writeInt(this.resCode);
         dest.writeString(this.resDesc);
     }
+
+    public String toString() {
+        return String.format("install result, resCode: %d, resDesc: %s", this.resCode, this.resDesc);
+    }
 }

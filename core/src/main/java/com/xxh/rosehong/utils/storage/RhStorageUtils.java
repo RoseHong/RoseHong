@@ -23,12 +23,15 @@ public class RhStorageUtils {
     }
 
     public static void save(File file, IRhDataStorage dataStorageMtd) {
-        if (file == null || !file.isFile()) {
+        if (file == null) {
             return;
         }
         if (!file.exists()) {
-            file.mkdirs();
-            RhFile.chmod(file, RhChmodMode.MODE_777);
+            File parentFile = file.getParentFile();
+            if (!parentFile.exists()) {
+                parentFile.mkdirs();
+                RhFile.chmod(parentFile, RhChmodMode.MODE_777);
+            }
         }
         Parcel parcel = Parcel.obtain();
         try {

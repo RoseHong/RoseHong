@@ -19,6 +19,7 @@ import com.xxh.rosehong.utils.ref.RhField;
 import com.xxh.rosehong.utils.ref.RhMethod;
 import com.xxh.rosehong.utils.ref.RhMethodParams;
 
+import java.io.File;
 import java.util.ArrayList;
 
 /**
@@ -31,7 +32,7 @@ public class PackageParserRef {
 
     public static RhConstructor<Object> constructor;
 
-    @RhMethodParams({String.class, int.class})
+    @RhMethodParams({File.class, int.class})
     public static RhMethod<Object> parsePackage;
 
     public static class PackageRef {
@@ -119,5 +120,10 @@ public class PackageParserRef {
         public static RhField<Integer> order;
         public static RhField<ComponentName> componentName;
         public static RhField<String> componentShortName;
+    }
+
+    public static class SigningDetailsRef {
+        public static Class<?> REF = RhClass.init(SigningDetailsRef.class, "android.content.pm.PackageParser$SigningDetails");
+        public static RhField<Signature[]> signatures;
     }
 }

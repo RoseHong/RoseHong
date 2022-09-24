@@ -92,7 +92,11 @@ public class RhPackageParser {
         rhPackage.usesOptionalLibraries = PackageParserRef.PackageRef.usesOptionalLibraries.get(basePackage);
         rhPackage.configPreferences = PackageParserRef.PackageRef.configPreferences.get(basePackage);
         rhPackage.reqFeatures = PackageParserRef.PackageRef.reqFeatures.get(basePackage);
-        rhPackage.mSignatures = PackageParserRef.PackageRef.mSignatures.get(basePackage);
+        if (PackageParserRef.PackageRef.mSignatures.isValid()) {    // Android P被封装成一个类了
+            rhPackage.mSignatures = PackageParserRef.PackageRef.mSignatures.get(basePackage);
+        } else {
+            rhPackage.mSigningDetails = PackageParserRef.PackageRef.mSigningDetails.get(basePackage);
+        }
 
         return rhPackage;
     }

@@ -89,9 +89,10 @@ public class RhUidSettingMap {
                 return -1;
             }
             RhLog.i(TAG, "New shared user" + sharedUserId + ": uid=" + s.mUid);
-            saveUidToStorage();
             mSharedUsers.put(sharedUserId, s);
+            saveUidToStorage();
         }
+        RhLog.i(TAG, "Get shared user" + sharedUserId + ": uid=" + s.mUid);
         return s.mUid;
     }
 

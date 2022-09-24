@@ -1,5 +1,7 @@
 package com.xxh.rosehong.utils.ref;
 
+import com.xxh.rosehong.utils.system.RhLog;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -9,7 +11,7 @@ import java.lang.reflect.InvocationTargetException;
  * @email mike_just@163.com
  * @date 2022/2/1 下午5:45
  */
-public class RhConstructor<T> {
+public class RhConstructor<T> extends RhRefBase {
     private static final String TAG = RhConstructor.class.getSimpleName();
 
     private Constructor<?> mRefConstructor;
@@ -23,6 +25,7 @@ public class RhConstructor<T> {
                 mRefConstructor = srcClass.getConstructor();
             }
             mRefConstructor.setAccessible(true);
+            mIsValid = true;
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
         }

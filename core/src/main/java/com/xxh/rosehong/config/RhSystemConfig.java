@@ -6,7 +6,7 @@ package com.xxh.rosehong.config;
  * @date 2022/2/4 上午12:52
  */
 
-import android.os.Environment;
+import com.xxh.rosehong.client.RhApp;
 
 /**
  * 系统级别的配置文件，一般情况下都不需要修改
@@ -48,7 +48,7 @@ public class RhSystemConfig {
         /**
          * 系统数据文件的根路径
          */
-        private static final String SYSTEM_FILE_ROOT_PATH = Environment.getDataDirectory().getPath() + "/system/data/";
+        private static final String SYSTEM_FILE_ROOT_PATH = RhApp.get().getHostContext().getApplicationInfo().dataDir + "/system/data/";
 
         /**
          * 已分配的uid存储文件

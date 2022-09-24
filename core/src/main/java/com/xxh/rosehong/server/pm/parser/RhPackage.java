@@ -38,6 +38,7 @@ public class RhPackage implements Parcelable {
     public int mVersionCode;
     public String mVersionName;
     public int mSharedUserLabel;
+    public Object mSigningDetails;
     public Object mExtras;
     public boolean use32bitAbi;
     public Bundle mAppMetaData;

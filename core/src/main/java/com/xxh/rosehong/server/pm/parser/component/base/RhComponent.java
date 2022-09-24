@@ -52,6 +52,9 @@ public class RhComponent<II extends RhIntentInfo> {
     // 用于安装器解析
     public RhComponent(Class<II> _IIClass, Object baseComponent) {
         try {
+            if (intents == null) {
+                intents = new ArrayList<>();
+            }
             // 解析IntentInfo
             ArrayList<Object> baseIntents = ComponentRef.intents.get(baseComponent);
             for (Object item : baseIntents) {
